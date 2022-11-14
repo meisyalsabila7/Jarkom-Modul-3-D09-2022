@@ -12,14 +12,83 @@
 
 ## Konfigurasi
 - Ostania
+```
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+address 192.189.1.1
+netmask 255.255.255.0
+
+auto eth2
+iface eth2 inet static
+address 192.189.2.1
+netmask 255.255.255.0
+
+auto eth3
+iface eth3 inet static
+address 192.189.3.1
+netmask 255.255.255.0
+```
 - SSS
+```
+auto eth0
+iface eth0 inet dhcp
+```
 - Garden
+```
+auto eth0
+iface eth0 inet dhcp
+```
 - Wise
+```
+auto eth0
+iface eth0 inet static
+  address 192.189.2.2
+  netmask 255.255.255.0
+  gateway 192.189.2.1
+```
 - Berlint
+```
+auto eth0
+iface eth0 inet static
+  address 192.189.2.3
+  netmask 255.255.255.0
+  gateway 192.189.2.1
+```
 - Westalis
+```
+auto eth0
+iface eth0 inet static
+  address 192.198.2.4
+  netmask 255.255.255.0
+  gateway 192.198.2.1
+```
 - Eden
+```
+auto eth0
+iface eth0 inet static
+  address 192.189.3.2
+  netmask 255.255.255.0
+  gateway 192.189.3.1
+```
 - NewstonCastle
+```
+auto eth0
+iface eth0 inet static
+  address 192.189.3.3
+  netmask 255.255.255.0
+  gateway 192.189.3.1
+```
 - KemonoPark
+```
+auto eth0
+iface eth0 inet static
+  address 192.189.3.4
+  netmask 255.255.255.0
+  gateway 192.189.3.1
+```
 
 ## Soal Nomor 1
 > Loid bersama Franky berencana membuat peta tersebut dengan kriteria `WISE sebagai DNS Server`, `Westalis sebagai DHCP Server`, `Berlint sebagai Proxy Server`.
