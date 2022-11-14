@@ -28,7 +28,10 @@
 Setelah Wise dikonfigurasikan, untuk membuat Wise menjadi DNS Server perlu untuk membuat file dengan isi seperti dibawah ini. Untuk menjalankannya gunakan command `bash WISE-DNS.sh`
 
 ```
-
+apt-get update
+apt-get install bind9 -y
+service bind9 start
+service bind9 status
 ```
 ![A 1 1](https://user-images.githubusercontent.com/96837287/201670268-f3b75cea-9888-4542-ad21-97d5c165371b.jpg)
 
