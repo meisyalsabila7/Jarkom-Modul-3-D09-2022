@@ -21,8 +21,8 @@
 - NewstonCastle
 - KemonoPark
 
-## Soal Nomor 1 dan 2
-> Loid bersama Franky berencana membuat peta tersebut dengan kriteria `WISE sebagai DNS Server`, `Westalis sebagai DHCP Server`, `Berlint sebagai Proxy Server` (1), dan `Ostania sebagai DHCP Relay` (2).
+## Soal Nomor 1
+> Loid bersama Franky berencana membuat peta tersebut dengan kriteria `WISE sebagai DNS Server`, `Westalis sebagai DHCP Server`, `Berlint sebagai Proxy Server` (1).
 
 ### Pengerjaan
 Setelah Wise dikonfigurasikan, untuk membuat Wise menjadi DNS Server perlu untuk membuat file dengan isi seperti dibawah ini. Untuk menjalankannya gunakan command `bash WISE-DNS.sh`
@@ -57,7 +57,10 @@ service squid status
 
 ![berlint proxy](https://user-images.githubusercontent.com/96837287/201672102-5180a733-d850-4e45-ab9c-10dc9808f6ad.jpg)
 
-Pada soal nomor 2 yakni perintah untuk kriteria Ostania sebagai DHCP relay, dapat ubah config pada relay /etc/default/isc-dhcp-relay menjadi seperti di bawah ini. Sebelumnya, Install relay pada Ostania `apt-get install isc-dhcp-relay -y`. Setelah itu untuk menjalankannya, gunakan command `bash Ostania-dhcprelay.sh`
+## Soal Nomor 2
+`Ostania sebagai DHCP Relay` (2)
+
+Pada soal nomor 2 yakni perintah untuk kriteria Ostania sebagai DHCP relay, dapat mengubah config pada relay /etc/default/isc-dhcp-relay menjadi seperti di bawah ini. Sebelumnya, Install relay pada Ostania `apt-get install isc-dhcp-relay -y`. Setelah itu untuk menjalankannya, gunakan command `bash Ostania-dhcprelay.sh`
 ```
 echo -e '
 # Defaults for isc-dhcp-relay initscript
