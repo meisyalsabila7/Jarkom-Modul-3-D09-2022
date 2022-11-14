@@ -133,9 +133,12 @@ range 192.189.2.60 192.189.2.85;
 > Client mendapatkan `DNS dari WISE` dan client dapat terhubung dengan internet melalui DNS tersebut.
 
 ### Pengerjaan
-
-### Dokumentasi
-
+pada configurasi wise, tambahkan line seperti ini pada directory `/var/cache/bind`
+```
+forwarders {
+    192.168.122.1;
+};
+```
 
 ## Soal Nomor 6
 > Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui `Switch 1` selama 5 menit sedangkan pada client yang melalui `Switch 3` selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit.
