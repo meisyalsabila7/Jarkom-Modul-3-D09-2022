@@ -11,6 +11,15 @@
 ![topologi](https://user-images.githubusercontent.com/96837287/201667955-ba5d5b9d-97e9-488b-aa00-0ec0d80f8073.jpeg)
 
 ## Konfigurasi
+- Ostania
+- SSS
+- Garden
+- Wise
+- Berlint
+- Westalis
+- Eden
+- NewstonCastle
+- KemonoPark
 
 ## Soal Nomor 1 dan 2
 > Loid bersama Franky berencana membuat peta tersebut dengan kriteria `WISE sebagai DNS Server`, `Westalis sebagai DHCP Server`, `Berlint sebagai Proxy Server` (1), dan `Ostania sebagai DHCP Relay` (2).
