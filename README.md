@@ -211,9 +211,10 @@ range 192.189.2.60 192.189.2.85;
 ## Soal Nomor 5
 > Client mendapatkan `DNS dari WISE` dan client dapat terhubung dengan internet melalui DNS tersebut.
 
-- Wise
 ### Pengerjaan
 pada configurasi wise, tambahkan line seperti ini pada directory `/var/cache/bind`
+
+- Wise
 ```
 forwarders {
     192.168.122.1;
