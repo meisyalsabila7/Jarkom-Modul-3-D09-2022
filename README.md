@@ -10,114 +10,52 @@
 ## Topologi
 ![topologi](https://user-images.githubusercontent.com/96837287/201667955-ba5d5b9d-97e9-488b-aa00-0ec0d80f8073.jpeg)
 
-## Konfigurasi
-- Ostania
-```
-auto eth0
-iface eth0 inet dhcp
+## SOAL 1:
+### Deskripsi:
+Loid bersama Franky berencana membuat peta tersebut dengan kriteria WISE sebagai DNS Server, Westalis sebagai DHCP Server, Berlint sebagai Proxy Server
 
-auto eth1
-iface eth1 inet static
-address 192.189.1.1
-netmask 255.255.255.0
+### Jawaban:
+**Konfigurasi DNS Server: WISE**\
+Ada pada file WISE-DNS.sh di root node WISE
+```bash
+echo ' zone "wise.D09.com" {
+	type master;
+	file "/etc/bind/wise/wise.D09.com";
+}; ' > /etc/bind/named.conf.local
 
-auto eth2
-iface eth2 inet static
-address 192.189.2.1
-netmask 255.255.255.0
+mkdir /etc/bind/wise
 
-auto eth3
-iface eth3 inet static
-address 192.189.3.1
-netmask 255.255.255.0
-```
-- SSS
-```
-auto eth0
-iface eth0 inet dhcp
-```
-- Garden
-```
-auto eth0
-iface eth0 inet dhcp
-```
-- Wise
-```
-auto eth0
-iface eth0 inet static
-  address 192.189.2.2
-  netmask 255.255.255.0
-  gateway 192.189.2.1
-```
-- Berlint
-```
-auto eth0
-iface eth0 inet static
-  address 192.189.2.3
-  netmask 255.255.255.0
-  gateway 192.189.2.1
-```
-- Westalis
-```
-auto eth0
-iface eth0 inet static
-  address 192.198.2.4
-  netmask 255.255.255.0
-  gateway 192.198.2.1
-```
-- Eden
-```
-auto eth0
-iface eth0 inet static
-  address 192.189.3.2
-  netmask 255.255.255.0
-  gateway 192.189.3.1
-```
-- NewstonCastle
-```
-auto eth0
-iface eth0 inet static
-  address 192.189.3.3
-  netmask 255.255.255.0
-  gateway 192.189.3.1
-```
-- KemonoPark
-```
-auto eth0
-iface eth0 inet static
-  address 192.189.3.4
-  netmask 255.255.255.0
-  gateway 192.189.3.1
-```
+cp /etc/bind/db.local /etc/bind/wise/wise.D09.com
 
-## Soal Nomor 1
-> Loid bersama Franky berencana membuat peta tersebut dengan kriteria `WISE sebagai DNS Server`, `Westalis sebagai DHCP Server`, `Berlint sebagai Proxy Server`.
+echo -e '
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     wise.D09.com. root.wise.D09.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      wise.D09.com.
+@       IN      A       192.189.3.3     ; IP WISE
+@       IN      AAAA    ::1
+' > /etc/bind/wise/wise.D09.com
 
-### Pengerjaan
-Setelah Wise dikonfigurasikan, untuk membuat Wise menjadi DNS Server perlu untuk membuat file dengan isi seperti dibawah ini. Untuk menjalankannya gunakan command `bash WISE-DNS.sh`
-
-- wise
+service bind9 restart
 ```
-apt-get update
-apt-get install bind9 -y
-service bind9 start
-service bind9 status
-```
-![A 1 1](https://user-images.githubusercontent.com/96837287/201670268-f3b75cea-9888-4542-ad21-97d5c165371b.jpg)
-
-Untuk membuat node Westalis menjadi DHCP Server, perlu mengonfigurasikan file dengan isi seperti dibawah ini dan jangan lupa untuk mengubah config interface di isc-dhcp-server menjadi `eth0`. Lalu, jalankan dengan command `bash westalis-dhcp.sh`
-
-- Westalis
-```
+**Konfigurasi DHCP Server: Westalis**\
+Ada pada file westalis-dhcp.sh di root node Westalis
+```bash
 echo -e '
 INTERFACES="eth0"
 ' > /etc/default/isc-dhcp-server
 ```
-
-Selanjutnya, untuk node Berlint sebagai Proxy Server dibutuhkan file konfigurasi yang berisi seperti dibawah ini. Dan menjalankannya dengan menggunakan command `bash Berlint-Proxy.sh`
-
-- Berlint
-```
+**Konfigurasi Proxy Server: Berlint**\
+Ada pada file Berlint-Proxy.sh di root node Berlint
+```bash
 mv /etc/squid/squid.conf /etc/squid/squid.conf.bak
 
 echo -e '
@@ -130,16 +68,14 @@ service squid restart
 service squid status
 ```
 
-![berlint proxy](https://user-images.githubusercontent.com/96837287/201672102-5180a733-d850-4e45-ab9c-10dc9808f6ad.jpg)
+## SOAL 2
+### Deskripsi
+Ostania sebagai DHCP Relay
 
-## Soal Nomor 2
-`Ostania sebagai DHCP Relay`
-
-### Pengerjaan
-Pada soal nomor 2 yakni perintah untuk kriteria Ostania sebagai DHCP relay, dapat mengubah config pada relay /etc/default/isc-dhcp-relay menjadi seperti di bawah ini. Sebelumnya, Install relay pada Ostania `apt-get install isc-dhcp-relay -y`. Setelah itu untuk menjalankannya, Enter/kosongi semua permintaan dan gunakan command `bash Ostania-dhcprelay.sh`
-
-- Ostania
-```
+### Jawaban
+**Konfigurasi DHCP Relay: Ostania**\
+Ada pada file Ostania-dhcprelay.sh di root node Ostania
+```bash
 echo -e '
 # Defaults for isc-dhcp-relay initscript
 # sourced by /etc/init.d/isc-dhcp-relay
@@ -158,15 +94,16 @@ INTERFACES="eth1 eth2 eth3"
 # Additional options that are passed to the DHCP relay daemon?
 OPTIONS=""
 ' > /etc/default/isc-dhcp-relay
-service isc-dhcp-relay restart
 ```
+## SOAL 3, 4, dan 6
+### Deskripsi
+- Soal 3: Client yang melalui Switch1 mendapatkan range IP dari [prefix IP].1.50 - [prefix IP].1.88 dan [prefix IP].1.120 - [prefix IP].1.155
+- Soal 4: Client yang melalui Switch3 mendapatkan range IP dari [prefix IP].2.10 - [prefix IP].2.30 dan [prefix IP].2.60 - [prefix IP].2.85
+- Soal 6: Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 5 menit sedangkan pada client yang melalui Switch3 selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit.
 
-![235 westalis](https://user-images.githubusercontent.com/96837287/201677037-8ff4dc1d-a420-438a-938b-9eebf008cb7f.jpg)
-
-Karena untuk nomor 2, 3, dan 5 saling terhubung, dan sehubungan dengan waktu yang amat terbatas maka untuk konfigurasinya dijadikan satu file yang sama. Untuk menjalankannya dapat menggunakan command `bash nomor235-westalis` pada client westalis.
-
-- Westalis
-```
+### Jawaban
+**Konfigurasi pada Westalis: nomor235-westalis.sh**\
+```bash
 echo -e '
 ddns-update-style none;
 
@@ -185,63 +122,217 @@ subnet 192.189.2.0 netmask 255.255.255.0{
     default-lease-time 600;
     max-lease-time 6900;
 }
+subnet 192.189.1.0 netmask 255.255.255.0{
+    range 192.189.1.50 192.189.1.88;
+    range 192.189.1.120 192.189.1.155;
+    option routers 192.189.1.1;
+    option broadcast-address 192.189.1.255;
+    option domain-name-servers 192.189.3.3;
+    default-lease-time 300;
+    max-lease-time 6900;
+}
+subnet 192.189.3.0 netmask 255.255.255.0{
+        option routers 192.189.3.1;
+}
+' > /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server restart
+service isc-dhcp-server status
 ```
-![235-westalis](https://user-images.githubusercontent.com/96837287/201677698-478ff20a-7fad-4d84-b7a6-e975d47fefb6.jpg)
+**Jawaban Soal 3 & 6 - SSS: nomor1-SSS.sh**\
+Jangan lupa untuk merestart node SSS sebelum menjalankan script berikut
+```bash
+echo -e '
+#auto eth0
+#iface eth0 inet static
+#       address 192.189.1.2
+#       netmask 255.255.255.0
+#       gateway 192.189.2.1
 
-## Soal Nomor 3
-> Client yang melalui `Switch 1` mendapatkan range IP dari `[prefix IP].1.50 - [prefix IP].1.88` dan `[prefix IP].1.120 - [prefix IP].1.155`.
+auto eth0
+iface eth0 inet dhcp
+' > /etc/network/interfaces
 
-### Pengerjaan
-
-- Westalis
-Dapat dilihat pada file konfigurasi `nomor235-westalis.sh`
+ifconfig eth0
 ```
-range 192.189.2.10 192.189.2.30;
-range 192.189.2.60 192.189.2.85;
+- ![nomor3&6-SSS](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/3%20sss.jpeg?raw=true)
+
+**Jawaban Soal 3 & 6 - Garden: nomor1-Garden.sh**\
+Jangan lupa untuk merestart node Garden sebelum menjalankan script berikut
+```bash
+echo -e '
+#auto eth0
+#iface eth0 inet static
+#       address 192.189.1.2
+#       netmask 255.255.255.0
+#       gateway 192.189.2.1
+
+auto eth0
+iface eth0 inet dhcp
+' > /etc/network/interfaces
+
+ifconfig eth0
+```
+- ![nomor3&6-Garden](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/3%20garden.jpeg?raw=true)
+
+**Jawaban Soal 4 & 6 - Eden: nomor1-Eden.sh**\
+Jangan lupa untuk merestart node Eden sebelum menjalankan script berikut
+```bash
+echo -e '
+#auto eth0
+#iface eth0 inet static
+#       address 192.189.2.2
+#       netmask 255.255.255.0
+#       gateway 192.189.2.1
+
+auto eth0
+iface eth0 inet dhcp
+' > /etc/network/interfaces
+ifconfig eth0
+```
+- ![nomor4&6-Eden](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%208.41.58%20PM.jpeg?raw=true)
+**Jawaban Soal 4 & 6 - NewstonCastle: nomor1-NewstonCastle.sh**\
+Jangan lupa untuk merestart node NewstonCastle sebelum menjalankan script berikut
+```bash
+echo -e '
+#auto eth0
+#iface eth0 inet static
+#       address 192.189.2.3
+#       netmask 255.255.255.0
+#       gateway 192.189.2.1
+
+auto eth0
+iface eth0 inet dhcp
+' > /etc/network/interfaces
+
+ifconfig eth0
+```
+- ![nomor4&6-NewstonCastle](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%208.42.23%20PM.jpeg?raw=true)
+**Jawaban Soal 4 & 6 - KemonoPark: nomor1-KemonoPark.sh**\
+Jangan lupa untuk merestart node KemonoPark sebelum menjalankan script berikut
+```bash
+echo -e '
+#auto eth0
+#iface eth0 inet static
+#       address 192.189.2.3
+#       netmask 255.255.255.0
+#       gateway 192.189.2.1
+
+auto eth0
+iface eth0 inet dhcp
+' > /etc/network/interfaces
+
+ifconfig eth0
+```
+- ![nomor4&6-KemonoPark](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%208.42.39%20PM.jpeg?raw=true)
+
+## SOAL 5
+### Deskripsi
+Client mendapatkan DNS dari WISE dan client dapat terhubung dengan internet melalui DNS tersebut.
+
+### Jawaban
+**Konfigurasi WISE: nomor4-wise.sh**\
+```bash
+echo -e '
+options {
+        directory "/var/cache/bind";
+        forwarders {
+                192.168.122.1;
+        };
+         //dnssec-validation auto;
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+        allow-query{any;};
+}; 
+'> /etc/bind/named.conf.options 
+
+service bind9 restart;
 ```
 
-## Soal Nomor 4
-> Client yang melalui `Switch 3` mendapatkan range IP dari `[prefix IP].3.10 - [prefix IP].3.30` dan `[prefix IP].3.60 - [prefix IP].3.85`.
-
-### Pengerjaan
-
-### Dokumentasi
-
-
-## Soal Nomor 5
-> Client mendapatkan `DNS dari WISE` dan client dapat terhubung dengan internet melalui DNS tersebut.
-
-### Pengerjaan
-pada configurasi wise, tambahkan line seperti ini pada directory `/var/cache/bind`
-
-- Wise
+**Konfigurasi SSS: nomor4-SSS.sh**\
+Jangan lupa untuk merestart node SSS sebelum menjalankan script berikut
+```bash
+cat /etc/resolv.conf
+ping google.com -c 3
 ```
-forwarders {
-    192.168.122.1;
-};
+- ![nomor5-SSS](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%209.02.23%20PM.jpeg?raw=true)
+**Konfigurasi Garden: nomor4-Garden.sh**\
+Jangan lupa untuk merestart node Garden sebelum menjalankan script berikut
+```bash
+cat /etc/resolv.conf
+ping google.com -c 3
 ```
+- ![nomor5-Garden](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%209.02.50%20PM.jpeg?raw=true)
+**Konfigurasi Eden: nomor4-Eden.sh**\
+Jangan lupa untuk merestart node Eden sebelum menjalankan script berikut
+```bash
+cat /etc/resolv.conf
+ping google.com -c 3
+```
+- ![nomor5-Eden](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%208.57.53%20PM.jpeg?raw=true)
+**Konfigurasi NewstonCastle: nomor4-NewstonCastle.sh**\
+Jangan lupa untuk merestart node NewstonCastle sebelum menjalankan script berikut
+```bash
+cat /etc/resolv.conf
+ping google.com -c 3
+```
+- ![nomor5-NewstonCastle](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%208.58.18%20PM.jpeg?raw=true)
+**Konfigurasi KemonoPark: nomor4-KemonoPark.sh**\
+Jangan lupa untuk merestart node KemonoPark sebelum menjalankan script berikut
+```bash
+cat /etc/resolv.conf
+ping google.com -c 3
+```
+- ![nomor5-KemonoPark](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%208.58.39%20PM.jpeg?raw=true)
 
-## Soal Nomor 6
-> Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui `Switch 1` selama 5 menit sedangkan pada client yang melalui `Switch 3` selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit.
-
-### Pengerjaan
-
-### Dokumentasi
-
-
-## Soal Nomor 7
-> Loid dan Franky berencana menjadikan `Eden sebagai server` untuk pertukaran informasi dengan alamat IP yang tetap dengan `IP [prefix IP].3.13`.
-
-### Pengerjaan
-
-### Dokumentasi
+## SOAL 7
+### Deskripsi
+Loid dan Franky berencana menjadikan Eden sebagai server untuk pertukaran informasi dengan alamat IP yang tetap dengan IP [prefix IP].2.13
+### Jawaban
+**Konfigurasi Westalis**\
+Tambahkan script berikut di bagian paling bawah pada file `/etc/dhcp/dhcpd.conf'
+```bash
+host Eden {
+    hardware ethernet 'hwaddress_milik_Eden';
+    fixed-address 192.189.2.13;
+}
+```
+lalu restart server DHCP dengan command 'service isc-dhcp-server restart'
+**Konfigurasi Eden**\
+Tambahkan script berikut di bagian paling bawah pada file `/etc/network/interfaces'
+```bash
+hwaddress ether 'hwaddress_milik_Eden'
+```
+lalu restart server DHCP dengan command 'service isc-dhcp-server restart'
+Kemudian, restart node Eden. Lalu, ketikkan command 'ifconfig eth0' dan copy hwaddress-nya,
+dalam kasus ini hwaddress eden adalah 76:82:7c:75:46:2b
+Salin hwaddress itu pada /etc/dhcp/dhcpd.conf (node Westalis) bagian 'hwaddress_milik_Eden' tanpa tanda kutip. Begitu pula pada /etc/network/interfaces (milik node Eden).
+- ![nomor7-Eden](https://github.com/meisyalsabila7/Jarkom-Modul-3-D09-2022/blob/main/aset/WhatsApp%20Image%202022-11-14%20at%209.11.15%20PM.jpeg?raw=true)
 
 
 ## Soal Nomor 8
 > Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh).
 
 ### Pengerjaan
+```bash
+echo '
+acl WORKING time MTWHF 08:00-17:00
 
+' > /etc/squid/acl.conf 
+
+echo '
+include /etc/squid/acl.conf
+
+http_port 8080
+http_access deny WORKING
+http_access allow all 
+visible_hostname Berlint
+
+' > /etc/squid/squid.conf
+
+service squid restart
+```
 ### Dokumentasi
 
 
@@ -249,7 +340,26 @@ forwarders {
 > Adapun pada hari dan jam kerja sesuai nomor (1), client hanya dapat mengakses domain loid-work.com dan franky-work.com (IP tujuan domain dibebaskan).
 
 ### Pengerjaan
+```bash
+echo '
+liod-work.com
+franky-work.com
 
+' > /etc/squid/work-sites.acl
+
+echo '
+include /etc/squid/acl.conf
+
+http_port 8080
+visible_hostname Berlint
+
+acl WORKSITES dstdomain "/etc/squid/work-sites.acl"
+http_access allow WORKSITES
+http_access deny WORKING
+http_access allow all
+
+' > /etc/squid/squid.conf
+```
 ### Dokumentasi
 
 
@@ -257,7 +367,27 @@ forwarders {
 > Saat akses internet dibuka, client dilarang untuk mengakses web tanpa HTTPS. (Contoh web HTTP: http://example.com).
 
 ### Pengerjaan
+```bash
+echo '
+liod-work.com
+franky-work.com
 
+' > /etc/squid/work-sites.acl
+
+echo '
+include /etc/squid/acl.conf
+
+http_port 8080
+visible_hostname Berlint
+
+acl WORKSITES dstdomain "/etc/squid/work-sites.acl"
+http_access allow WORKSITES
+http_access deny WORKING
+http_access allow all
+http_access deny !SSL_ports
+
+' > /etc/squid/squid.conf
+```
 ### Dokumentasi
 
 
@@ -265,7 +395,27 @@ forwarders {
 > Agar menghemat penggunaan, akses internet dibatasi dengan kecepatan maksimum 128 Kbps pada setiap host (Kbps = kilobit per second; lakukan pengecekan pada tiap host, ketika 2 host akses internet pada saat bersamaan, keduanya mendapatkan speed maksimal yaitu 128 Kbps)
 
 ### Pengerjaan
+```bash
+echo '
+include /etc/squid/acl.conf
 
+http_port 8080
+visible_hostname Berlint
+
+acl SSL_ports port 443
+acl WORKSITES dstdomain "/etc/squid/work-sites.acl"
+#http_access deny !SSL_ports
+http_access allow WORKSITES
+#http_access deny WORKING
+http_access allow all
+
+delay_pools 1
+delay_class 1 2
+delay_access 1 allow all
+delay_parameters 1 none 16000/16000
+' > /etc/squid/squid.conf
+service squid restart
+```
 ### Dokumentasi
 
 
@@ -273,9 +423,31 @@ forwarders {
 > Setelah diterapkan, ternyata peraturan nomor (4) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur
 
 ### Pengerjaan
+```bash
+echo '
+include /etc/squid/acl.conf
 
+http_port 8080
+visible_hostname Berlint
+
+acl SSL_ports port 443
+acl WORKSITES dstdomain "/etc/squid/work-sites.acl"
+#http_access deny !SSL_ports
+http_access allow WORKSITES
+#http_access deny WORKING
+http_access allow all
+
+acl OPEN_TIME time MTWHF
+delay_pools 1
+delay_class 1 2
+delay_access 1 allow !OPEN_TIME
+delay_parameters 1 none 16000/16000
+' > /etc/squid/squid.conf
+service squid restart
+```
 ### Dokumentasi
 
 
 ## Kendala
 - waktu pengerjaan praktikum sangat terbatas
+- sering gagal untuk membuat static IP untuk Eden (Nomor 7)
