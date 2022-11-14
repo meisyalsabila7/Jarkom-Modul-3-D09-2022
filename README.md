@@ -8,6 +8,7 @@
 | 3 | Meisya Salsabila Indrijo Putri | 5025201114 |
 
 ## Topologi
+![topologi](https://user-images.githubusercontent.com/96837287/201667955-ba5d5b9d-97e9-488b-aa00-0ec0d80f8073.jpeg)
 
 ## Konfigurasi
 
