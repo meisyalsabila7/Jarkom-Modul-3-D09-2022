@@ -197,3 +197,4 @@ forwarders {
 
 
 ## Kendala
+- waktu pengerjaan praktikum sangat terbatas
