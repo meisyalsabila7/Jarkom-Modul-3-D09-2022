@@ -96,6 +96,7 @@ iface eth0 inet static
 ### Pengerjaan
 Setelah Wise dikonfigurasikan, untuk membuat Wise menjadi DNS Server perlu untuk membuat file dengan isi seperti dibawah ini. Untuk menjalankannya gunakan command `bash WISE-DNS.sh`
 
+- wise
 ```
 apt-get update
 apt-get install bind9 -y
@@ -106,6 +107,7 @@ service bind9 status
 
 Untuk membuat node Westalis menjadi DHCP Server, perlu mengonfigurasikan file dengan isi seperti dibawah ini dan jangan lupa untuk mengubah config interface di isc-dhcp-server menjadi `eth0`. Lalu, jalankan dengan command `bash westalis-dhcp.sh`
 
+- Westalis
 ```
 echo -e '
 INTERFACES="eth0"
@@ -114,6 +116,7 @@ INTERFACES="eth0"
 
 Selanjutnya, untuk node Berlint sebagai Proxy Server dibutuhkan file konfigurasi yang berisi seperti dibawah ini. Dan menjalankannya dengan menggunakan command `bash Berlint-Proxy.sh`
 
+- Berlint
 ```
 mv /etc/squid/squid.conf /etc/squid/squid.conf.bak
 
@@ -134,6 +137,8 @@ service squid status
 
 ### Pengerjaan
 Pada soal nomor 2 yakni perintah untuk kriteria Ostania sebagai DHCP relay, dapat mengubah config pada relay /etc/default/isc-dhcp-relay menjadi seperti di bawah ini. Sebelumnya, Install relay pada Ostania `apt-get install isc-dhcp-relay -y`. Setelah itu untuk menjalankannya, Enter/kosongi semua permintaan dan gunakan command `bash Ostania-dhcprelay.sh`
+
+- Ostania
 ```
 echo -e '
 # Defaults for isc-dhcp-relay initscript
@@ -160,6 +165,7 @@ service isc-dhcp-relay restart
 
 Karena untuk nomor 2, 3, dan 5 saling terhubung, dan sehubungan dengan waktu yang amat terbatas maka untuk konfigurasinya dijadikan satu file yang sama. Untuk menjalankannya dapat menggunakan command `bash nomor235-westalis` pada client westalis.
 
+- Westalis
 ```
 echo -e '
 ddns-update-style none;
@@ -187,6 +193,7 @@ subnet 192.189.2.0 netmask 255.255.255.0{
 
 ### Pengerjaan
 
+- Westalis
 Dapat dilihat pada file konfigurasi `nomor235-westalis.sh`
 ```
 range 192.189.2.10 192.189.2.30;
@@ -206,6 +213,8 @@ range 192.189.2.60 192.189.2.85;
 
 ### Pengerjaan
 pada configurasi wise, tambahkan line seperti ini pada directory `/var/cache/bind`
+
+- Wise
 ```
 forwarders {
     192.168.122.1;
