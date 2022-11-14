@@ -60,6 +60,7 @@ service squid status
 ## Soal Nomor 2
 `Ostania sebagai DHCP Relay` (2)
 
+### Pengerjaan
 Pada soal nomor 2 yakni perintah untuk kriteria Ostania sebagai DHCP relay, dapat mengubah config pada relay /etc/default/isc-dhcp-relay menjadi seperti di bawah ini. Sebelumnya, Install relay pada Ostania `apt-get install isc-dhcp-relay -y`. Setelah itu untuk menjalankannya, Enter/kosongi semua permintaan dan gunakan command `bash Ostania-dhcprelay.sh`
 ```
 echo -e '
@@ -114,8 +115,11 @@ subnet 192.189.2.0 netmask 255.255.255.0{
 
 ### Pengerjaan
 
-### Dokumentasi
-
+Dapat dilihat pada file konfigurasi `nomor235-westalis.sh`
+```
+range 192.189.2.10 192.189.2.30;
+range 192.189.2.60 192.189.2.85;
+```
 
 ## Soal Nomor 4
 > Client yang melalui `Switch 3` mendapatkan range IP dari `[prefix IP].3.10 - [prefix IP].3.30` dan `[prefix IP].3.60 - [prefix IP].3.85`.
